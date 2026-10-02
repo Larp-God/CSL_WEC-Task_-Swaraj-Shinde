@@ -28,6 +28,9 @@ Hello reader, so today i day 1 of starting with the assignment. I started with a
                          but i realized i have to pass a pointer.
 
 
+
+
+
 *Day 2* : 
 
   
