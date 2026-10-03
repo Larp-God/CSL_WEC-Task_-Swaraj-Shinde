@@ -33,5 +33,18 @@ Hello reader, so today i day 1 of starting with the assignment. I started with a
 
 *Day 2* : 
 
+Today was a leap damn. I learnt the basic TCP Framing and understood how like stuff works. I had to take hte help of ChatGPT to learn and Gemini for troubleshooting because i couldn't find any concise video taht would teach me the required topics. This part was more verbose than yesterday but what i can see in general is that while writing code for networking we write many statements for like fail cases and printing the error so that's an interesting thing i learnt about this style of programming.
+
+    What i learnt today: 
+        (a) Learnt how i can create custom framing for TCP.
+            One error i was doing continuously was that i was giving the datatype 'int' to variables,
+            instead of uint8_t/uint32_t. I had understood how different they are but it just seems muscle memory.
+
+        (b) Biggest lessong for today is that i shouldn't read Berserk and do tasks cuz mangas are too addictive :').
+
+
+*Day 3* :
+
+
   
 
