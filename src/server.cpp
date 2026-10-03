@@ -29,8 +29,9 @@ int main(){
         send(clientSocket, message, strlen(message), 0);
 
     //testing for custom TCP Framing
+    /*
     Message msgr;
-    if(recvMessage(clientSocket,msgr)){
+        if(recvMessage(clientSocket,msgr)){
         cout << (int) msgr.type << " = Type" << endl;
         for(uint8_t c : msgr.payload){
             cout << static_cast<char>(c);
@@ -43,6 +44,7 @@ int main(){
      if(!sendMessage(clientSocket, msg)){
         return 0;
        };
+    */
      
 
 

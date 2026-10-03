@@ -24,6 +24,7 @@ int main(){
     cout << buffer << endl;
     
     //trial testing for custom TCP framing
+    /* 
     Message msg;
      msg.type = 00;
      msg.payload = {'H', 'E', 'L', 'L', 'O',' ', 'G', 'U', 'Y', 'S'};
@@ -39,6 +40,6 @@ int main(){
         }
         cout << endl;
     }   
-
+    */
     return 0;
 }
