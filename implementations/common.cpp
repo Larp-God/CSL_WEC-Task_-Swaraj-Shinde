@@ -1,4 +1,6 @@
 #include "./headers.h"
+#include <openssl/evp.h>
+#include <ostream>
 using namespace std;
 
 class Message{
@@ -86,3 +88,67 @@ bool sendMessage(int socket, Message& msg){
 
 }
 
+
+
+enum MESSAGE_TYPE : uint8_t{
+    CHAT = 1,
+    ERR,
+    TERMINATE,
+    KEY_INIT,
+    KEY_RESPONSE
+};
+
+enum class connectionstate{
+    CONNECTED,
+    HANDSHAKE_IN_PROGRESS,
+    CHAT,
+    CLOSED,
+    ERR
+};
+
+bool handleMessage(Message& msg, connectionstate& cncst){
+    uint8_t msgtype = msg.type;
+    //All true cases if msgtype is CHAT
+    if(msgtype == CHAT && cncst == connectionstate::CHAT){return true;}
+
+    //All true cases if msgtype is KEY_INIT
+    if(msgtype == KEY_INIT && cncst == connectionstate::CONNECTED){cncst = connectionstate::HANDSHAKE_IN_PROGRESS
+                                                                                            ;return true;}
+    
+    //All true cases if msgtype is KEY_RESPOSNE
+    if(msgtype == KEY_RESPONSE && cncst == connectionstate::HANDSHAKE_IN_PROGRESS){cncst = connectionstate::CHAT;return true;}
+    
+    //All true cases if msgtype is TERMINATE
+    if(msgtype == TERMINATE && cncst == connectionstate::CONNECTED){cncst = connectionstate::CLOSED;return true;}
+    if(msgtype == TERMINATE && cncst == connectionstate::HANDSHAKE_IN_PROGRESS){cncst = connectionstate::CLOSED;return true;}
+    if(msgtype == TERMINATE && cncst == connectionstate::CHAT){cncst = connectionstate::CLOSED;return true;}
+
+    return false;
+}
+
+//DH stuff
+int initDH(){
+EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new_from_name(nullptr, "DH", nullptr);
+    if(ctx == nullptr){
+        cerr << "Failed to create context of DH" << endl;
+        return 1;
+    }
+
+int initkeygen = EVP_PKEY_keygen_init(ctx);
+if(initkeygen <= 0){
+    cerr << "Faield to initialsie key generation" << endl;
+    EVP_PKEY_CTX_free(ctx);
+    return 1;
+}
+
+int setgrpname = EVP_PKEY_CTX_set_group_name(ctx, "ffdhe2048");
+if(setgrpname <= 0){
+    cerr << "Failed to create group" << endl;
+    EVP_PKEY_CTX_free(ctx);
+    return 1;
+}
+
+cout << "All parameters selected succesfully" << endl;
+EVP_PKEY_CTX_free(ctx);
+return 0;
+}

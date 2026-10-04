@@ -12,13 +12,10 @@
 #include <cstddef>
 #include<cstdint>
 
+#include<openssl/evp.h>
+#include<openssl/rand.h>
+#include<openssl/kdf.h>
+#include<openssl/err.h>
 
-enum MESSAGE_TYPE : uint8_t{
-    CHAT = 1,
-    ERR,
-    TERMINATE,
-    KEY_INIT,
-    KEY_RESPONSE
-};
 
 #endif
