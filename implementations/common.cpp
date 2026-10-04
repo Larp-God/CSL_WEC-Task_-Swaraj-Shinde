@@ -1,6 +1,7 @@
 #include "./headers.h"
-#include <openssl/evp.h>
+#include <openssl/bn.h>
 #include <ostream>
+
 using namespace std;
 
 class Message{
@@ -127,28 +128,59 @@ bool handleMessage(Message& msg, connectionstate& cncst){
 }
 
 //DH stuff
-int initDH(){
+EVP_PKEY* initDH(vector<uint8_t> &pubBytes){
+
+//giving context of generating key
 EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new_from_name(nullptr, "DH", nullptr);
     if(ctx == nullptr){
         cerr << "Failed to create context of DH" << endl;
-        return 1;
+        return nullptr;
     }
 
+//intiaalise key gen
 int initkeygen = EVP_PKEY_keygen_init(ctx);
 if(initkeygen <= 0){
     cerr << "Faield to initialsie key generation" << endl;
     EVP_PKEY_CTX_free(ctx);
-    return 1;
+    return nullptr;
 }
 
+//giving group name
 int setgrpname = EVP_PKEY_CTX_set_group_name(ctx, "ffdhe2048");
 if(setgrpname <= 0){
     cerr << "Failed to create group" << endl;
     EVP_PKEY_CTX_free(ctx);
-    return 1;
+    return nullptr;
 }
 
+//actually creating keys
+EVP_PKEY* key = nullptr;
+int keypair = EVP_PKEY_generate(ctx, &key);
+if(keypair <= 0){
+    cerr << "Keypair generation failed" << endl;
+    EVP_PKEY_CTX_free(ctx);
+    return nullptr;
+ }
+
+ 
+ //extracting public key
+ BIGNUM* pubkey = nullptr;
+ int result  = EVP_PKEY_get_bn_param(key, OSSL_PKEY_PARAM_PUB_KEY, &pubkey);
+if(result <= 0){
+    cerr << "Failed to extract public key" << endl;
+    EVP_PKEY_CTX_free(ctx);
+    EVP_PKEY_free(key);
+    return nullptr;
+}
+int pubkeylen = BN_num_bytes(pubkey);
+cout << "Public Key size: " << pubkeylen << endl;
+pubBytes.resize(pubkeylen);
+BN_bn2bin(pubkey, pubBytes.data());
+
+//cleanup
 cout << "All parameters selected succesfully" << endl;
+BN_free(pubkey);
 EVP_PKEY_CTX_free(ctx);
-return 0;
+return key;
+
 }

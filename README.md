@@ -44,6 +44,10 @@ Today was a leap damn. I learnt the basic TCP Framing and understood how like st
 
 
 *Day 3* :
+    Again a very verbose day, learnt the entirety of Diffie-Hellman key exchange starting from the theory from computerphile and then using ChatGPT to understand what we ar egonna implement in the assignment. I tried finding videos of where coding for DH key exchange is done but i could only find the theory videos and not the coding ones. This part was very exhaustive because there were a lot of steps and minute minute conversions.the last part i ended up copypasting from chatgpt because i had gotten tired of typing it by myself after reading the theory and i lowkey dont have much time left too.
+
+*Day 4*: 
+
 
 
   

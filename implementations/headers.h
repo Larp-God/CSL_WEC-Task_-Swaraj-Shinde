@@ -16,6 +16,9 @@
 #include<openssl/rand.h>
 #include<openssl/kdf.h>
 #include<openssl/err.h>
+#include <ostream>
+#include <openssl/core_names.h>
+#include <openssl/bn.h>
 
 
 #endif
