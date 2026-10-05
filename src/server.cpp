@@ -168,7 +168,55 @@ int main(){
     cout << "Encryption key length" << encryptKey.size() << endl;
     cout << "MAC key length" << macKey.size() << endl;
 
-    
+    //Level 4 
+    vector<uint8_t> transcript;
+
+    //calc handshake MAC
+    transcript.insert(transcript.end(),msg3.payload.begin(),msg3.payload.end());
+
+    transcript.insert(transcript.end(),serverPubBytes.begin(),serverPubBytes.end());
+
+
+    //LVL 4 RECV
+    Message finished;
+     if(!recvMessage(clientSocket, finished)){
+        cerr << "Failed to receive handshake confirmation" << endl;
+        return 1;
+    }
+
+    if(finished.type != HANDSHAKE_FINISHED){
+        cerr << "Expected handshake confirmation" << endl;
+        return 1;
+    }
+
+    //MAC calc
+    vector<uint8_t> expectedMAC = calculateHMAC(macKey, transcript);
+    //comapring
+    if(finished.payload != expectedMAC){
+        cerr << "Handshake verification FAILED!" << endl;
+        return 1;
+    }
+
+    cout << "Client handshake confirmation verified!" << endl;
+
+    //server calc MAC   
+    vector<uint8_t> serverFinished =
+        calculateHMAC(macKey, transcript);
+
+    if(serverFinished.empty()){
+        cerr << "Failed to calculate server handshake MAC" << endl;
+        return 1;
+    }
+
+    //sending message
+    Message finishedResponse;
+    finishedResponse.type = HANDSHAKE_FINISHED;
+    finishedResponse.payload = serverFinished;
+
+    if(!sendMessage(clientSocket, finishedResponse)){
+        cerr << "Failed to send handshake confirmation" << endl;
+        return 1;
+    }
 
         EVP_PKEY_free(clientPublicKey);
         EVP_PKEY_free(serverKey);

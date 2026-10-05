@@ -129,6 +129,52 @@ int main(){
     cout << "Encryption key length" << encryptKey.size() << endl;
     cout << "MAC key length" << macKey.size() << endl;
 
+    //Level 4 implementation
+    vector<uint8_t> transcript;
+
+    transcript.insert(transcript.end(),pubBytes.begin(),pubBytes.end());
+
+    transcript.insert(transcript.end(),response.payload.begin(),response.payload.end());
+
+    //client's handshake MAC
+    vector<uint8_t> clientFinished = calculateHMAC(macKey, transcript);
+    if(clientFinished.empty()){
+        cerr << "Failed to calculate handshake MAC" << endl;
+        return 1;
+    }
+
+    //LVL 4 testing
+    Message finished;
+    finished.type = HANDSHAKE_FINISHED;
+    finished.payload = clientFinished;
+
+    if(!sendMessage(clientSocket, finished)){
+        cerr << "Failed to send handshake confirmation" << endl;
+        return 1;
+    }
+
+    //client verfying server
+    Message serverFinished;
+
+    if(!recvMessage(clientSocket, serverFinished)){
+        cerr << "Failed to receive server handshake confirmation" << endl;
+        return 1;
+    }
+
+    if(serverFinished.type != HANDSHAKE_FINISHED){
+        cerr << "Expected handshake confirmation" << endl;
+        return 1;
+    }
+
+    //
+    vector<uint8_t> expectedServerMAC = calculateHMAC(macKey, transcript);
+    if(serverFinished.payload != expectedServerMAC){
+        cerr << "Server handshake verification FAILED!" << endl;
+        return 1;
+    }
+
+    cout << "Server handshake confirmation verified!" << endl;
+
 
     /*
     Message msgr;

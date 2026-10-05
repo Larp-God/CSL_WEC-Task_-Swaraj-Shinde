@@ -1,5 +1,5 @@
 #include "./headers.h"
-#include <openssl/evp.h>
+
 
 
 
@@ -97,7 +97,8 @@ enum MESSAGE_TYPE : uint8_t{
     ERR,
     TERMINATE,
     KEY_INIT,
-    KEY_RESPONSE
+    KEY_RESPONSE,
+    HANDSHAKE_FINISHED
 };
 
 enum class connectionstate{
@@ -245,4 +246,28 @@ vector<uint8_t> deriveKey(vector<uint8_t> &secretKey, const string& usecase){
     EVP_PKEY_CTX_free(ctx);
     return derivedKey;
 
+}
+
+
+vector<uint8_t> calculateHMAC(const vector<uint8_t>& key,const vector<uint8_t>& data){
+    vector<uint8_t> mac(EVP_MAX_MD_SIZE);
+    unsigned int macLen = 0;
+
+    unsigned char* result = HMAC(
+        EVP_sha256(),
+        key.data(),
+        static_cast<int>(key.size()),
+        data.data(),
+        data.size(),
+        mac.data(),
+        &macLen
+    );
+
+    if(result == nullptr){
+        cerr << "HMAC calculation failed" << endl;
+        return {};
+    }
+
+    mac.resize(macLen);
+    return mac;
 }
