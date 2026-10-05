@@ -121,6 +121,14 @@ int main(){
     sharedSecret.resize(secretLen);
 
     cout << "Client derived shared secret. Length: "<< sharedSecret.size() << " bytes" << endl;
+    cout << "DH shared secret successfully derived." << endl;
+
+     //using deriveKey 
+    vector<uint8_t> encryptKey = deriveKey(sharedSecret, "encryption");
+    vector<uint8_t> macKey = deriveKey(sharedSecret, "authentication");
+    cout << "Encryption key length" << encryptKey.size() << endl;
+    cout << "MAC key length" << macKey.size() << endl;
+
 
     /*
     Message msgr;

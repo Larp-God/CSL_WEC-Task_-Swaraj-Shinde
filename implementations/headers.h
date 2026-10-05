@@ -11,6 +11,7 @@
 #include<asm-generic/socket.h>
 #include <cstddef>
 #include<cstdint>
+#include <sys/types.h>
 
 #include<openssl/evp.h>
 #include<openssl/rand.h>

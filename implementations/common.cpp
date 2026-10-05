@@ -1,6 +1,7 @@
 #include "./headers.h"
-#include <openssl/bn.h>
-#include <ostream>
+#include <openssl/evp.h>
+
+
 
 using namespace std;
 
@@ -182,5 +183,66 @@ cout << "All parameters selected succesfully" << endl;
 BN_free(pubkey);
 EVP_PKEY_CTX_free(ctx);
 return key;
+}
+
+
+/*Flow over here too remains the same as we have seen before,
+    create context -> initialsie context -> cofigure it -> derive it
+*/
+vector<uint8_t> deriveKey(vector<uint8_t> &secretKey, const string& usecase){
+
+    //create context
+    EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF,nullptr);
+    if(ctx == nullptr){
+        cerr << "Failed to create HKDF context" << endl;
+        return {};
+    }
+
+    //init context
+    if(EVP_PKEY_derive_init(ctx) <= 0){
+        cerr << "Failed to initialsie HKDF" << endl;
+        EVP_PKEY_CTX_free(ctx);
+        return {};
+    }
+
+    //tell HMAC to use SHA_256 for creating true randomness in the number
+    if(EVP_PKEY_CTX_set_hkdf_md(ctx, EVP_sha256()) <= 0){
+        cerr << "Faield to set up SHA_256" << endl;
+        EVP_PKEY_CTX_free(ctx);
+        return {};
+    }
+
+    //giving HKDF DH secret key and using salting too
+    if(EVP_PKEY_CTX_set1_hkdf_salt(ctx, nullptr, 0) <= 0){
+        cerr << "Failed to add salt to HKDF" << endl;
+        EVP_PKEY_CTX_free(ctx);
+        return {};
+    }
+
+    //
+    if(EVP_PKEY_CTX_set1_hkdf_key(ctx, secretKey.data(), secretKey.size()) <= 0){
+        cerr << "Failed to set up HKDF key" << endl;
+        EVP_PKEY_CTX_free(ctx);
+        return {};
+    }
+
+    //having usecase of either as encryption key or as authentication key
+    if(EVP_PKEY_CTX_add1_hkdf_info(ctx, reinterpret_cast<const unsigned char*>(usecase.data()), usecase.size()) <=0){
+        cerr << "Failed to give assign usecase" << endl;
+        EVP_PKEY_CTX_free(ctx);
+        return {};
+    }
+
+    //deriving the 32 bytes
+    vector<uint8_t> derivedKey(32);
+    size_t keylen = derivedKey.size();
+    if(EVP_PKEY_derive(ctx, derivedKey.data(), &keylen) <= 0){
+        cerr << "Failed to derive key" << endl;
+        EVP_PKEY_CTX_free(ctx);
+        return {};
+    }
+    derivedKey.resize(keylen);
+    EVP_PKEY_CTX_free(ctx);
+    return derivedKey;
 
 }
