@@ -34,6 +34,7 @@ Hello reader, so today i day 1 of starting with the assignment. I started with a
 
 *Day 2* : 
 
+
 Today was a leap damn. I learnt the basic TCP Framing and understood how like stuff works. I had to take hte help of ChatGPT to learn and Gemini for troubleshooting because i couldn't find any concise video taht would teach me the required topics. This part was more verbose than yesterday but what i can see in general is that while writing code for networking we write many statements for like fail cases and printing the error so that's an interesting thing i learnt about this style of programming.
 
     What i learnt today: 
@@ -45,6 +46,8 @@ Today was a leap damn. I learnt the basic TCP Framing and understood how like st
 
 
 *Day 3* :
+
+
     Again a very verbose day, learnt the entirety of Diffie-Hellman key exchange starting from the theory from computerphile and then using ChatGPT to understand what we ar egonna implement in the assignment. I tried finding videos of where coding for DH key exchange is done but i could only find the theory videos and not the coding ones. This part was very exhaustive because there were a lot of steps and minute minute conversions.the last part i ended up copypasting from chatgpt because i had gotten tired of typing it by myself after reading the theory and i lowkey dont have much time left too.
 
 *Day 4*: 
