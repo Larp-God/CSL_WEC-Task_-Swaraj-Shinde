@@ -1,6 +1,7 @@
 # CSL_WEC Task_ Swaraj Shinde
 Custom security layer protocol, inspried by TLS
 
+**To the evaluator, I have just implemented till Level 4, i could not complete the further Levels, however i did do the Bonus part of Level 3, i implemented HKDF in my code**
 
 *Day 1* : 
 
@@ -47,8 +48,10 @@ Today was a leap damn. I learnt the basic TCP Framing and understood how like st
     Again a very verbose day, learnt the entirety of Diffie-Hellman key exchange starting from the theory from computerphile and then using ChatGPT to understand what we ar egonna implement in the assignment. I tried finding videos of where coding for DH key exchange is done but i could only find the theory videos and not the coding ones. This part was very exhaustive because there were a lot of steps and minute minute conversions.the last part i ended up copypasting from chatgpt because i had gotten tired of typing it by myself after reading the theory and i lowkey dont have much time left too.
 
 *Day 4*: 
+I implemented level 3 and level 4 today, this is as far as i go before deadline. I got very exhausted today. I learnt about how we cant directly use DH shared key as transmitting that directly over the network is a vulenrability. I leanrt how we split that in two 32 bit components and use them as encryption and authorisation key because DH has no protection against MiTM attacks. 
+Level 4 was all about how we prevent a tampered message being accepted by our server. It reminded me of blockchain where we ahve a similar mechanism of calculating block hash so that the transaction cannot be manipulate3d when the block is formed from the mempool. It was fun to see how things start to repeat on a bigger scales. I ahd heavy reliance on ChatGPT today and i didn't type our the code by myself for the alst part because of exhaustion. I have udnerstood the code but i didn't type it out by myself i just studied the why and how.
 
-
+Overall it was a fun journey and i learnt a lot more about networking than what i could've via just studying theory.
 
   
 
